@@ -4,21 +4,14 @@
 #include <ilcplex/ilocplex.h>
 #include <ctime>
 
-
-
 using namespace std;
+
 
 const float EPS = 0.0001; // 0.01
 const int NMAX = 16;
 
-
 int Cs[NMAX];
 int Ps[NMAX];
-
-
-
-
-
 
 
 void sort_periods(const int n) {
@@ -37,11 +30,7 @@ void sort_periods(const int n) {
 }
 
 
-
-
-
 void generate_periods_RM(const int n, const int Pmin_LB, const int Pmin_UB, const float Pmaxmin) {
-    
     srand(std::clock());
 
     // Generating Pmin
@@ -62,11 +51,7 @@ void generate_periods_RM(const int n, const int Pmin_LB, const int Pmin_UB, cons
 }
 
 
-
-
-
 void generate_periods_notRM(const int n, const int Pmin_LB, const int Pmin_UB, const float Pmaxmin) {
-
     srand(std::clock());
     
     unsigned short i_forPmin = rand() % n;
@@ -92,8 +77,6 @@ void generate_periods_notRM(const int n, const int Pmin_LB, const int Pmin_UB, c
         else Ps[i] = Pmin + (int)rand() % (Pmax - Pmin);
     }
 }
-
-
 
 
 /*bool generate_execs_with_Umin(const int n, const float Utotal, const float Umax, const float Umin) {
@@ -162,11 +145,7 @@ void generate_periods_notRM(const int n, const int Pmin_LB, const int Pmin_UB, c
 }*/
 
 
-
-
-
 bool generate_execs(const int n, const float Utotal, const float Umax, const float Umin, const float allowedDeviation) {
-    
     ILOSTLBEGIN
     IloEnv env;
     IloModel model(env);
@@ -225,13 +204,9 @@ bool generate_execs(const int n, const float Utotal, const float Umax, const flo
 }
 
 
-
-
-
-
-
-int generate_taskset(const int n, const float Utotal, const float Umax, const float Umin, const int Pmin_LB, const int Pmin_UB, const float Pmaxmin, const float allowedDeviation, const bool isRM, int (&Cs1)[NMAX], int (&Ps1)[NMAX]) {
-    
+int generate_taskset(const int n, const float Utotal, const float Umax, const float Umin, const int Pmin_LB,
+                     const int Pmin_UB, const float Pmaxmin, const float allowedDeviation, const bool isRM,
+                     int (&Cs1)[NMAX], int (&Ps1)[NMAX]) {
     bool generated = false;
     
     while (!generated) {
