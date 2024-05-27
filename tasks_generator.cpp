@@ -204,9 +204,9 @@ bool generate_execs(const int n, const float Utotal, const float Umax, const flo
 }
 
 
-int generate_taskset(const int n, const float Utotal, const float Umax, const float Umin, const int Pmin_LB,
-                     const int Pmin_UB, const float Pmaxmin, const float allowedDeviation, const bool isRM,
-                     int (&Cs1)[NMAX], int (&Ps1)[NMAX]) {
+void generate_taskset(const int n, const float Utotal, const float Umax, const float Umin, const int Pmin_LB,
+                      const int Pmin_UB, const float Pmaxmin, const float allowedDeviation, const bool isRM,
+                      int (&Cs1)[NMAX], int (&Ps1)[NMAX]) {
     bool generated = false;
     
     while (!generated) {
@@ -221,6 +221,4 @@ int generate_taskset(const int n, const float Utotal, const float Umax, const fl
         Cs1[i] = Cs[i];
         Ps1[i] = Ps[i];
     }
-    
-    return 0;
 }

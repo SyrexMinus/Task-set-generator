@@ -8,7 +8,7 @@ using namespace std;
 
 
 void generate_serie(const string fileName_string, const int casesNum, const int n, const float U, const float Umax,
-                    const float Umin, const float Pmin_LB, const float Pmin_UB, const float Pratio,
+                    const float Umin, const int Pmin_LB, const int Pmin_UB, const float Pratio,
                     const float allowedDeviation) {
     cout << "generate_series" << endl;
     cout << "n: " << n << endl;
@@ -53,7 +53,8 @@ void generate_serie(const string fileName_string, const int casesNum, const int 
 }
 
 
-string generate_file_name(const int expType, const int n, const float U, const float Umax, const float Pratio) {
+string generate_file_name(const int n, const float U, const float Umax, const float Umin, const int Pmin_LB,
+                          const int Pmin_UB, const float Pratio, const float allowedDeviation, const int casesNum) {
     ostringstream ss_n;
     ss_n << ((unsigned short)n);
     string n_str(ss_n.str());
@@ -65,98 +66,70 @@ string generate_file_name(const int expType, const int n, const float U, const f
     ostringstream ss_Umax;
     ss_Umax << ((float)Umax);
     string Umax_str(ss_Umax.str());
+
+    ostringstream ss_Umin;
+    ss_Umin << ((float)Umin);
+    string Umin_str(ss_Umin.str());
+
+    ostringstream ss_Pmin_LB;
+    ss_Pmin_LB << ((float)Pmin_LB);
+    string Pmin_LB_str(ss_Pmin_LB.str());
+
+    ostringstream ss_Pmin_UB;
+    ss_Pmin_UB << ((float)Pmin_UB);
+    string Pmin_UB_str(ss_Pmin_UB.str());
     
     ostringstream ss_Pratio;
     ss_Pratio << ((float)Pratio);
     string Pratio_str(ss_Pratio.str());
-    
-    string fileName;
 
-    if (expType == 0) {
-        fileName = string("task_sets_varying_n[U_") + U_str + "_Umax_" + Umax_str + "_Pratio_" + Pratio_str + "].tsv";
-    } else if (expType == 1) {
-        fileName = string("task_sets_varying_U[n_") + n_str + "_Umax_" + Umax_str + "_Pratio_" + Pratio_str + "].tsv";
-    } else if (expType == 2) {
-        fileName = string("task_sets_varying_Pratio[n_") + n_str + "_U_" + U_str + "_Umax_" + Umax_str + "].tsv";
-    } else if (expType == 3) {
-        fileName = string("task_sets_varying_Umax[n_") + n_str + "_U_" + U_str + "_Pratio_" + Pratio_str + "].tsv";
-    }
+    ostringstream ss_allowedDeviation;
+    ss_allowedDeviation << ((float)allowedDeviation);
+    string allowedDeviation_str(ss_allowedDeviation.str());
+
+    ostringstream ss_casesNum;
+    ss_casesNum << ((float)casesNum);
+    string casesNum_str(ss_casesNum.str());
+
+    string fileName = (string("task_sets_[n_") + n_str + "_U_" + U_str + "_Umax_" + Umax_str + "_Umin_" + Umin_str
+                       + "_Pmin_LB_" + Pmin_LB_str + "_Pmin_UB_" + Pmin_UB_str + "_Pratio_" + Pratio_str
+                       + "_allowedDeviation_" + allowedDeviation_str + "_casesNum_" + casesNum_str + "].tsv");
     
     return fileName;
 }
 
 
 int main() {
-    int expType;
-    int n = 0;
-    float U = 0;
-    float Umax = 0;
+    int n;
+    float U;
+    float Umax;
     float Umin = 0;
+    float Pratio;
     int Pmin_LB;
     int Pmin_UB;
-    float Pratio = 1;
     float allowedDeviation;
     int casesNum;
-
-    cerr << "Experiment type [0 - varying n, 1 - varying U, 2 - varying Pmax/Pmin, 3 - varying Umax]?\n> ";
-    cin >> expType;
     
-    if (expType != 0) {
-        cerr << "n?\n> ";
-        cin >> n;
-    }
-    
-    if (expType != 1) {
-        cerr << "U?\n> ";
-        cin >> U;
-    }
-    
-    if (expType != 3) {
-        cerr << "Umax?\n> ";
-        cin >> Umax;
-    }
-    
-    if (expType != 2) {
-        cerr << "Pmax/Pmin?\n> ";
-        cin >> Pratio;
-    }
-    
-    cerr << "Pmin_LB?\n> ";
+    cout << "n?\n> ";
+    cin >> n;
+    cout << "U?\n> ";
+    cin >> U;
+    cout << "Umax?\n> ";
+    cin >> Umax;
+    cout << "Pmax/Pmin?\n> ";
+    cin >> Pratio;
+    cout << "Pmin_LB?\n> ";
     cin >> Pmin_LB;
-    cerr << "Pmin_UB?\n> ";
+    cout << "Pmin_UB?\n> ";
     cin >> Pmin_UB;
-    cerr << "Allowed deviation?\n> ";
+    cout << "Allowed deviation?\n> ";
     cin >> allowedDeviation;
-    cerr << "Number of cases to generate?\n> ";
+    cout << "Number of cases to generate?\n> ";
     cin >> casesNum;
-
-    string fileName_string = generate_file_name(expType, n, U, Umax, Pratio);
-
-    if (expType == 0) {
-        for (n = 7; n <= 11; ++n) {  // TODO: move Pratio to user input
-            cout << "n: " << n << endl;
-            generate_serie(fileName_string, casesNum, n, U, Umax,
-                           Umin, Pmin_LB, Pmin_UB, Pratio, allowedDeviation);
-        }
-    } else if (expType == 1) {
-        for (U = 1.6; U < 4.05; U = U + 0.1) {  // TODO: move Pratio to user input
-            cout << "U: " << U << endl;
-            generate_serie(fileName_string, casesNum, n, U, Umax,
-                           Umin, Pmin_LB, Pmin_UB, Pratio, allowedDeviation);
-        }
-    } else if (expType == 2) {        
-        for (Pratio = 6; Pratio <= 6; Pratio = Pratio + 1) {  // TODO: move Pratio to user input
-            cout << "Pratio: " << Pratio << endl;
-            generate_serie(fileName_string, casesNum, n, U, Umax,
-                           Umin, Pmin_LB, Pmin_UB, Pratio, allowedDeviation);
-        }
-    } else if (expType == 3) {
-        for (Umax = 0.4; Umax < 1.01; Umax = Umax + 0.05) {  // TODO: move Pratio to user input
-            cout << "Umax: " << Umax << endl;
-            generate_serie(fileName_string, casesNum, n, U, Umax,
-                           Umin, Pmin_LB, Pmin_UB, Pratio, allowedDeviation);
-        }
-    }
+    
+    string fileName_string = generate_file_name(n, U, Umax, Umin, Pmin_LB, Pmin_UB, Pratio, allowedDeviation,
+                                                casesNum);
+    generate_serie(fileName_string, casesNum, n, U, Umax, Umin, Pmin_LB, Pmin_UB, Pratio, allowedDeviation);
 
     return 0;
 }
